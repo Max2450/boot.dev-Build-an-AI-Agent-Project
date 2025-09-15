@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from google import genai
 import sys
 from google.genai import types
+import config
 
 def main():
     #print("Hello from aiproject!")
@@ -36,7 +37,9 @@ def main():
     messages = [types.Content(role="user", parts=[types.Part(text=user_input)])]
 
     # send a prompt using gemini 2.0 flash, passing in the list of user messages
-    response = client.models.generate_content(model='gemini-2.0-flash-001', contents=messages)
+    # also take in system prompt from config.py
+    system_prompt = config.SYSTEM_PROMPT
+    response = client.models.generate_content(model='gemini-2.0-flash-001', contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt))
     
     # print the response
     print(response.text)
