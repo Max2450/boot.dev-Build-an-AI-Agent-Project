@@ -4,6 +4,7 @@ from google import genai
 import sys
 from google.genai import types
 import config
+from functions.get_files_info import schema_get_files_info, available_functions, config as functions_config
 
 def main():
     #print("Hello from aiproject!")
@@ -38,11 +39,19 @@ def main():
 
     # send a prompt using gemini 2.0 flash, passing in the list of user messages
     # also take in system prompt from config.py
+    # also pass in the available functions and config object created in get_files_info.py
+    # this makes the get_files_info function available to the Gemini model
     system_prompt = config.SYSTEM_PROMPT
-    response = client.models.generate_content(model='gemini-2.0-flash-001', contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt))
+    response = client.models.generate_content(model='gemini-2.0-flash-001', contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt, tools=[available_functions]))
     
-    # print the response
-    print(response.text)
+    # if the response contains a function call, print the function name and args
+    function_call_part = response.function_calls[0] if response.function_calls else None
+    if response.function_calls:
+        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+
+    else:
+        # print the response
+        print(response.text)
     
     # if verbose tag used, print tokens used and prompt used
     if response and verbose:

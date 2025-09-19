@@ -1,4 +1,37 @@
 import os
+from google import genai
+from google.genai import types
+from config import SYSTEM_PROMPT as system_prompt
+
+# Define the function schema for get_files_info to be used by the Gemini API
+# This schema describes the function name, its purpose, and the parameters it accepts.
+schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+            ),
+        },
+    ),
+)
+
+# Register the function schema in a Tool object to make it available for the Gemini API
+# This allows the AI to call this function when needed.
+available_functions = types.Tool(
+    function_declarations=[
+        schema_get_files_info,
+    ]
+)
+
+# Create a configuration object for the Gemini API that includes the available functions
+# and the system instruction to guide the AI's behavior.
+config=types.GenerateContentConfig(
+    tools=[available_functions], system_instruction=system_prompt
+)
 
 """List contents of a directory and their sizes and is_dir values, checking that the target dir 
 is inside of the working dir scope and a valid dir."""
@@ -33,3 +66,4 @@ def get_files_info(working_directory, directory="."):
         return '\n'.join(line_list)
     except Exception as e:
         return f"Error: {e}"
+
