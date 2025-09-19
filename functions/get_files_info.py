@@ -19,11 +19,59 @@ schema_get_files_info = types.FunctionDeclaration(
     ),
 )
 
+# Define the function schema for get_file_content to be used by the Gemini API
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads the content of a specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory where the file is located, relative to the working directory.",
+            ),
+        },
+    ),
+)
+
+# Define the function schema for run_python_file to be used by the Gemini API
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Runs a specified Python file with optional arguments, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory where the Python file is located, relative to the working directory.",
+            ),
+        },
+    ),
+)
+
+# Define the function schema for write_file to be used by the Gemini API
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Writes content to a specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory where the file is located, relative to the working directory.",
+            ),
+        },
+    ),
+)
+
 # Register the function schema in a Tool object to make it available for the Gemini API
 # This allows the AI to call this function when needed.
 available_functions = types.Tool(
     function_declarations=[
         schema_get_files_info,
+        schema_get_file_content,
+        schema_run_python_file,
+        schema_write_file
     ]
 )
 

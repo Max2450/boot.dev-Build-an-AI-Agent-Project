@@ -4,7 +4,7 @@ from google import genai
 import sys
 from google.genai import types
 import config
-from functions.get_files_info import schema_get_files_info, available_functions, config as functions_config
+from functions.get_files_info import schema_get_files_info, schema_get_file_content, schema_run_python_file, schema_write_file, available_functions, config as functions_config
 
 def main():
     #print("Hello from aiproject!")
