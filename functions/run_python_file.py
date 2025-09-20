@@ -1,6 +1,23 @@
 import os
 import subprocess
 import sys
+from google import genai
+from google.genai import types
+
+# Define the function schema for run_python_file to be used by the Gemini API
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Runs a specified Python file with optional arguments, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The filepath where the Python file is located, relative to the working directory.",
+            ),
+        },
+    ),
+)
 
 """Run a Python file within a specified working dir, ensuring the target file is inside the working dir scope."""
 def run_python_file(working_directory, file_path, args=[]):

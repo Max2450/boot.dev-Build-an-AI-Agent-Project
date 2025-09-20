@@ -1,5 +1,22 @@
 import os
 import config
+from google import genai
+from google.genai import types
+
+# Define the function schema for get_file_content to be used by the Gemini API
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads the content of a specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The filepath where the file is located, relative to the working directory.",
+            ),
+        },
+    ),
+)
 
 """Read the content of a file within a specified working dir, ensuring the target file is inside the working dir scope and a regular file. 
 If the file exceeds MAX_CHARS, truncate the output and indicate truncation"""
