@@ -17,3 +17,6 @@ When a user asks a question or makes a request, make a function call plan. You c
 
 All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
 """
+
+# limit on the number of function call iterations the AI can make to prevent infinite loops
+MAX_GENERATION_ITERATIONS = 20

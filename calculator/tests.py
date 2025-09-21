@@ -1,11 +1,15 @@
+# File: calculator/tests.py
+# Unit tests for the Calculator class in pkg/calculator.py
 import unittest
 from pkg.calculator import Calculator
 
 
 class TestCalculator(unittest.TestCase):
+    # Set up a Calculator instance before each test
     def setUp(self):
         self.calculator = Calculator()
 
+    # Test basic arithmetic operations
     def test_addition(self):
         result = self.calculator.evaluate("3 + 5")
         self.assertEqual(result, 8)
@@ -22,6 +26,7 @@ class TestCalculator(unittest.TestCase):
         result = self.calculator.evaluate("10 / 2")
         self.assertEqual(result, 5)
 
+    # Test edge cases and error handling
     def test_nested_expression(self):
         result = self.calculator.evaluate("3 * 4 + 5")
         self.assertEqual(result, 17)
@@ -42,7 +47,7 @@ class TestCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.evaluate("+ 3")
 
-
+# Run the tests
 if __name__ == "__main__":
     unittest.main()
 
