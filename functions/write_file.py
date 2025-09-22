@@ -9,11 +9,20 @@ schema_write_file = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
+            "working_directory": types.Schema(
+                type=types.Type.STRING,
+                description="Absolute or relative working directory to constrain execution."
+            ),
             "file_path": types.Schema(
                 type=types.Type.STRING,
                 description="The filepath where the file is located, relative to the working directory.",
             ),
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="The content to write to the file.",
+            ),
         },
+        required=["working_directory", "file_path"],
     ),
 )
 

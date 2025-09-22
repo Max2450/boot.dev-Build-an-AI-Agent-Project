@@ -1,7 +1,6 @@
 import os
 from google import genai
 from google.genai import types
-from config import SYSTEM_PROMPT as system_prompt
 
 # Define the function schema for get_files_info to be used by the Gemini API
 # This schema describes the function name, its purpose, and the parameters it accepts.
@@ -11,74 +10,16 @@ schema_get_files_info = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
+            "working_directory": types.Schema(
+                type=types.Type.STRING,
+                description="Absolute or relative working directory to constrain file listing."
+            ),
             "directory": types.Schema(
                 type=types.Type.STRING,
                 description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
             ),
         },
     ),
-)
-
-# Define the function schema for get_file_content to be used by the Gemini API
-schema_get_file_content = types.FunctionDeclaration(
-    name="get_file_content",
-    description="Reads the content of a specified file, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "directory": types.Schema(
-                type=types.Type.STRING,
-                description="The directory where the file is located, relative to the working directory.",
-            ),
-        },
-    ),
-)
-
-# Define the function schema for run_python_file to be used by the Gemini API
-schema_run_python_file = types.FunctionDeclaration(
-    name="run_python_file",
-    description="Runs a specified Python file with optional arguments, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "directory": types.Schema(
-                type=types.Type.STRING,
-                description="The directory where the Python file is located, relative to the working directory.",
-            ),
-        },
-    ),
-)
-
-# Define the function schema for write_file to be used by the Gemini API
-schema_write_file = types.FunctionDeclaration(
-    name="write_file",
-    description="Writes content to a specified file, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "directory": types.Schema(
-                type=types.Type.STRING,
-                description="The directory where the file is located, relative to the working directory.",
-            ),
-        },
-    ),
-)
-
-# Register the function schema in a Tool object to make it available for the Gemini API
-# This allows the AI to call this function when needed.
-available_functions = types.Tool(
-    function_declarations=[
-        schema_get_files_info,
-        schema_get_file_content,
-        schema_run_python_file,
-        schema_write_file
-    ]
-)
-
-# Create a configuration object for the Gemini API that includes the available functions
-# and the system instruction to guide the AI's behavior.
-config=types.GenerateContentConfig(
-    tools=[available_functions], system_instruction=system_prompt
 )
 
 """List contents of a directory and their sizes and is_dir values, checking that the target dir 
